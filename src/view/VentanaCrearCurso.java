@@ -25,7 +25,7 @@ class VentanaCrearCurso extends JFrame {
 
         btnCrear.addActionListener(e -> {
             String nombre = txtNombre.getText();
-            int codigo = (int) (Math.random() * 2000);
+            int codigo = Universidad.generarCodigoCurso();
             Cursos nuevoCurso = new Cursos(nombre, codigo);
             Universidad.CursosUniversidad.add(nuevoCurso);
             JOptionPane.showMessageDialog(this, "Curso '" + nombre + "' creado con código: " + codigo);

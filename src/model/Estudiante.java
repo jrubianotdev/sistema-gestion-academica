@@ -11,7 +11,7 @@ public class Estudiante extends Persona implements Matricula {
     public Estudiante(String carrera, String nombre, int edad, char genero) {
         super(nombre, edad, genero);
         this.carrera = carrera;
-        this.codigoEstudiante = (int) (Math.random() * 2000);
+        this.codigoEstudiante = Universidad.generarCodigoEstudiante();
     }
 
     public String getCarrera() {
