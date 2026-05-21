@@ -42,9 +42,10 @@ class VentanaRegistroEstudiante extends JFrame {
         lblCarrera.setBounds(30, 180, 100, 30);
         add(lblCarrera);
 
-        JTextField txtCarrera = new JTextField();
-        txtCarrera.setBounds(140, 180, 180, 30);
-        add(txtCarrera);
+        JComboBox<String> cmbCarreras = new JComboBox<>(new String[] {"Derecho", "Ingeniería de Sistemas", "Contaduría Pública", "Ingeniería Industrial",
+        "Medicina", "Fisioterapia", "Microbilogía", "Bacteriología", "Instrumentación Quirúrgica", "Administración de Negocios Internacionales", "Turismo"});
+        cmbCarreras.setBounds(140, 180, 180, 30);
+        add(cmbCarreras);             
 
         JButton btnGuardar = new JButton("Guardar");
         btnGuardar.setBounds(140, 230, 120, 30);
@@ -52,15 +53,14 @@ class VentanaRegistroEstudiante extends JFrame {
 
         btnGuardar.addActionListener(e -> {
 
-            if (txtNombre.getText().isEmpty() || txtEdad.getText().isEmpty() ||
-                    txtCarrera.getText().isEmpty()) {
+            if (txtNombre.getText().isEmpty() || txtEdad.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Por favor completa todos los campos.");
                 return;
             }
 
             String nombre = txtNombre.getText();
             int edad = Integer.parseInt(txtEdad.getText());
-            String carrera = txtCarrera.getText();
+            String carrera = cmbCarreras.getSelectedItem().toString();
             char genero = cmbGeneros.getSelectedItem().toString().charAt(0);
 
             Estudiante nuevoEstudiante = new Estudiante(carrera, nombre, edad, genero);
