@@ -2,6 +2,8 @@ package model;
 
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
 public class Estudiante extends Persona implements Matricula {
 
     private String carrera;
@@ -44,7 +46,14 @@ public class Estudiante extends Persona implements Matricula {
 
     public void Matricular(Cursos c) {
 
+        for (Cursos curso : CursosEstudiante) {
+            if (c.getCodigoCurso() == curso.getCodigoCurso()) {
+                JOptionPane.showMessageDialog(null, "El estudiante ya está matriculado en este curso.");
+                return;
+            }            
+        }
         CursosEstudiante.add(c);
+        JOptionPane.showMessageDialog(null, "Matriculado exitosamente en " + c.getNombre());
 
     }
 

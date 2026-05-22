@@ -78,7 +78,6 @@ btnMatricular.addActionListener(e -> {
     Cursos cursoSeleccionado = Universidad.CursosUniversidad.get(indexCurso);
 
     estudianteSeleccionado.Matricular(cursoSeleccionado);
-    JOptionPane.showMessageDialog(null, "Estudiante matriculado en: " + cursoSeleccionado.getNombre());
     dispose();
 
 });
