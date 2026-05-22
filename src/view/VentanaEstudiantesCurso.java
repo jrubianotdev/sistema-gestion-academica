@@ -52,8 +52,8 @@ public class VentanaEstudiantesCurso extends JFrame {
 
             List<Estudiante> matriculados = new ArrayList<>();
             for (Estudiante est : Universidad.EstudiantesUniversidad) {
-                for (Cursos c : est.getLista()) {
-                    if (c.getCodigoCurso() == seleccionado.getCodigoCurso()) {
+                for (Matricula m : est.getMatriculas()) {
+                    if (m.getCurso().getCodigoCurso() == seleccionado.getCodigoCurso()) {
                         matriculados.add(est);
                         break;
                     }
