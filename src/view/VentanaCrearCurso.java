@@ -25,6 +25,19 @@ class VentanaCrearCurso extends JFrame {
 
         btnCrear.addActionListener(e -> {
             String nombre = txtNombre.getText();
+
+            if (nombre.isBlank()) {
+                JOptionPane.showMessageDialog(null, "El nombre del curso no puede estar vacio");
+                return;
+            }
+
+            for (Cursos curso : Universidad.CursosUniversidad) {
+                if (curso.getNombre().equalsIgnoreCase(nombre)) {
+                    JOptionPane.showMessageDialog(null, "Ya existe un curso con este nombre");
+                    return;
+                }
+            }
+
             int codigo = Universidad.generarCodigoCurso();
             Cursos nuevoCurso = new Cursos(nombre, codigo);
             Universidad.CursosUniversidad.add(nuevoCurso);
@@ -34,4 +47,3 @@ class VentanaCrearCurso extends JFrame {
         setVisible(true);
     }
 }
-
