@@ -2,68 +2,74 @@ package view;
 
 import javax.swing.*;
 import model.*;
+import java.awt.event.*;
 
 class VentanaMatricularEstudiante extends JFrame {
 
     public VentanaMatricularEstudiante() {
         setTitle("Matricular Estudiante");
-        setSize(350, 250);
+        setSize(400, 300);
         setLayout(null);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        JLabel lblCodigo = new JLabel("Código Estudiante:");
-        lblCodigo.setBounds(20, 30, 140, 30);
-        add(lblCodigo);
+        JLabel lblBuscar = new JLabel("Buscar:");
+        lblBuscar.setBounds(30, 30 , 100, 30);
+        add(lblBuscar);        
 
-        JTextField txtCodigo = new JTextField();
-        txtCodigo.setBounds(170, 30, 130, 30);
-        add(txtCodigo);
+        JTextField txtBuscar = new JTextField();
+        txtBuscar.setBounds(140, 30, 180, 30);
+        add(txtBuscar);
+
+        JLabel lblEstudiante = new JLabel("Estudiante:");
+        lblEstudiante.setBounds(30, 80 , 100, 30);
+        add(lblEstudiante);        
+
+        JComboBox<Estudiante> cmbEstudiantes = new JComboBox<>();
+        for (Estudiante est : Universidad.EstudiantesUniversidad) {
+            cmbEstudiantes.addItem(est);
+        }
+        cmbEstudiantes.setBounds(140, 80, 180, 30);
+        add(cmbEstudiantes);
+        
+        txtBuscar.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                String filtro = txtBuscar.getText().toLowerCase();
+                cmbEstudiantes.removeAllItems();
+                for (Estudiante est : Universidad.EstudiantesUniversidad) {
+                    if (est.getNombre().toLowerCase().contains(filtro)) {
+                        cmbEstudiantes.addItem(est);
+                    }
+                }
+            }
+        });        
 
         JLabel lblCurso = new JLabel("Curso:");
-        lblCurso.setBounds(20, 80, 140, 30);
+        lblCurso.setBounds(30, 130, 180, 30);
         add(lblCurso);
 
         JComboBox<String> cbCursos = new JComboBox<>();
         for (Cursos c : Universidad.CursosUniversidad) {
             cbCursos.addItem(c.getNombre() + " - " + c.getCodigoCurso());
         }
-        cbCursos.setBounds(170, 80, 130, 30);
+        cbCursos.setBounds(140, 130, 180, 30);
         add(cbCursos);
 
         JButton btnMatricular = new JButton("Matricular");
-        btnMatricular.setBounds(110, 140, 120, 30);
+        btnMatricular.setBounds(140, 180, 120, 30);
         add(btnMatricular);
 
-        btnMatricular.addActionListener(e -> {
-            try {
-                int codigo = Integer.parseInt(txtCodigo.getText());
+btnMatricular.addActionListener(e -> {
+    int indexEstudiante = cmbEstudiantes.getSelectedIndex();
+    int indexCurso = cbCursos.getSelectedIndex();
 
-                Estudiante estudianteEncontrado = null;
-                for (Estudiante est : Universidad.EstudiantesUniversidad) {
-                    if (est.getCodigoEstudiante() == codigo) {
-                        estudianteEncontrado = est;
-                        break;
-                    }
-                }
+    Estudiante estudianteSeleccionado = Universidad.EstudiantesUniversidad.get(indexEstudiante);
+    Cursos cursoSeleccionado = Universidad.CursosUniversidad.get(indexCurso);
 
-                if (estudianteEncontrado == null) {
-                    JOptionPane.showMessageDialog(null, "Estudiante no encontrado.");
-                    return;
-                }
-
-                int indexSeleccionado = cbCursos.getSelectedIndex();
-                Cursos cursoSeleccionado = Universidad.CursosUniversidad.get(indexSeleccionado);
-
-                estudianteEncontrado.Matricular(cursoSeleccionado);
-                JOptionPane.showMessageDialog(null, "Estudiante matriculado en: " + cursoSeleccionado.getNombre());
-                dispose();
-
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Ingresa un código numérico válido.");
-            }
-        });
-
+    estudianteSeleccionado.Matricular(cursoSeleccionado);
+    JOptionPane.showMessageDialog(null, "Estudiante matriculado en: " + cursoSeleccionado.getNombre());
+    dispose();
+});
         setVisible(true);
     }
 }
