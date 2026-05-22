@@ -53,13 +53,22 @@ class VentanaRegistroEstudiante extends JFrame {
 
         btnGuardar.addActionListener(e -> {
 
-            if (txtNombre.getText().isEmpty() || txtEdad.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Por favor completa todos los campos.");
+            if (txtNombre.getText().isBlank() || txtEdad.getText().isBlank()) {
+                JOptionPane.showMessageDialog(null, "No pueden haber campos vacíos.");
                 return;
             }
 
             String nombre = txtNombre.getText();
-            int edad = Integer.parseInt(txtEdad.getText());
+            int edad;
+            try {
+
+                edad = Integer.parseInt(txtEdad.getText());
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null,"La edad debe ser un número entero.");
+                return;
+            }
+
             String carrera = cmbCarreras.getSelectedItem().toString();
             char genero = cmbGeneros.getSelectedItem().toString().charAt(0);
 
