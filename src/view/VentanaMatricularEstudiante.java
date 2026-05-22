@@ -60,8 +60,19 @@ class VentanaMatricularEstudiante extends JFrame {
         add(btnMatricular);
 
 btnMatricular.addActionListener(e -> {
+
     int indexEstudiante = cmbEstudiantes.getSelectedIndex();
     int indexCurso = cbCursos.getSelectedIndex();
+
+    if (indexEstudiante == -1) {
+        JOptionPane.showMessageDialog(null,"Seleccione un estudiante");
+        return;
+    }
+
+    if (indexCurso == -1) {
+        JOptionPane.showMessageDialog(null,"Seleccione un curso");
+        return;
+    }    
 
     Estudiante estudianteSeleccionado = Universidad.EstudiantesUniversidad.get(indexEstudiante);
     Cursos cursoSeleccionado = Universidad.CursosUniversidad.get(indexCurso);
@@ -69,6 +80,7 @@ btnMatricular.addActionListener(e -> {
     estudianteSeleccionado.Matricular(cursoSeleccionado);
     JOptionPane.showMessageDialog(null, "Estudiante matriculado en: " + cursoSeleccionado.getNombre());
     dispose();
+
 });
         setVisible(true);
     }
