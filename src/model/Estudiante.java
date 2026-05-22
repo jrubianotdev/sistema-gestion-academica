@@ -4,11 +4,11 @@ import java.util.*;
 
 import javax.swing.JOptionPane;
 
-public class Estudiante extends Persona implements Matricula {
+public class Estudiante extends Persona {
 
     private String carrera;
     private int codigoEstudiante;
-    private List<Cursos> CursosEstudiante = new ArrayList<>();
+    private List<Matricula> matriculas = new ArrayList<>();
 
     public Estudiante(String carrera, String nombre, int edad, char genero) {
         super(nombre, edad, genero);
@@ -20,8 +20,8 @@ public class Estudiante extends Persona implements Matricula {
         return carrera;
     }
 
-    public List<Cursos> getLista() {
-        return CursosEstudiante;
+    public List<Matricula> getMatriculas() {
+        return matriculas;
     }
 
     public void setCarrera(String carrera) {
@@ -46,13 +46,13 @@ public class Estudiante extends Persona implements Matricula {
 
     public void Matricular(Cursos c) {
 
-        for (Cursos curso : CursosEstudiante) {
-            if (c.getCodigoCurso() == curso.getCodigoCurso()) {
+        for (Matricula matricula : matriculas) {
+            if (c.getCodigoCurso() == matricula.getCurso().getCodigoCurso()) {
                 JOptionPane.showMessageDialog(null, "El estudiante ya está matriculado en este curso.");
                 return;
             }            
         }
-        CursosEstudiante.add(c);
+        matriculas.add(new Matricula(c, getCodigoEstudiante()));
         JOptionPane.showMessageDialog(null, "Matriculado exitosamente en " + c.getNombre());
 
     }

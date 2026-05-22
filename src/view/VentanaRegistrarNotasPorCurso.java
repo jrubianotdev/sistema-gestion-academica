@@ -1,44 +1,64 @@
 package view;
 
 import javax.swing.*;
+import javax.swing.table.*;
+import java.util.*;
 import model.*;
 
 public class VentanaRegistrarNotasPorCurso extends JFrame{
 
         public VentanaRegistrarNotasPorCurso() {
-        setTitle("Cursos");
+        setTitle("Registrar Notas por Curso");
         setSize(600, 400);
         setLayout(null);
         setLocationRelativeTo(null);
         setResizable(false);    
 
         JLabel lblCurso = new JLabel("Curso:");
-        lblCurso.setBounds(20, 80, 140, 30);
+        lblCurso.setBounds(20, 20, 60, 30);
         add(lblCurso);        
 
-        JComboBox<String> cbCursos = new JComboBox<>();
+        JComboBox<Cursos> cbCursos = new JComboBox<>();
         for (Cursos c : Universidad.CursosUniversidad) {
-            cbCursos.addItem(c.getNombre() + " - " + c.getCodigoCurso());
+            cbCursos.addItem(c);
         }
-        cbCursos.setBounds(170, 80, 130, 30);
+        cbCursos.setBounds(90, 20, 200, 30);
         add(cbCursos);
 
         String[] columnas = { "Código", "Nombre", "Nota 1", "Nota 2", "Nota 3"};
-        Object[][] datos = new Object[Universidad.EstudiantesUniversidad.size()][5];
+        Object[][] datosVacios = {};
+        JTable tabla = new JTable(datosVacios, columnas);
+        JScrollPane scroll = new JScrollPane(tabla);
+        scroll.setBounds(20, 70, 550, 230);
+        add(scroll);              
 
-        for (int i = 0; i < Universidad.EstudiantesUniversidad.size(); i++) {
-            Estudiante est = Universidad.EstudiantesUniversidad.get(i);
+        cbCursos.addActionListener( e -> {
+            Cursos seleccionado = (Cursos) cbCursos.getSelectedItem();
+            if (seleccionado == null) return;
+
+            List<Estudiante> matriculados = new ArrayList<>();
+            for (Estudiante est : Universidad.EstudiantesUniversidad) {
+                for (Matricula m : est.getMatriculas()) {
+                    if (m.getCurso().getCodigoCurso() == seleccionado.getCodigoCurso()) {
+                        matriculados.add(est);
+                        break;
+                    }
+                }
+            }
+
+        Object[][] datos = new Object[matriculados.size()][5];
+        for (int i = 0; i < matriculados.size(); i++) {
+            Estudiante est = matriculados.get(i);
             datos[i][0] = est.getCodigoEstudiante();
             datos[i][1] = est.getNombre();
             datos[i][2] = "";
             datos[i][3] = "";
-            datos[i][3] = "";
+            datos[i][4] = "";
         }
 
-        JTable tabla = new JTable(datos, columnas);
-        JScrollPane scroll = new JScrollPane(tabla);
-        scroll.setBounds(20, 130, 300, 150);
-        add(scroll);                
+        tabla.setModel(new DefaultTableModel(datos, columnas));
+
+        });
 
         setVisible(true);
 

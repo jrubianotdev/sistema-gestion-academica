@@ -50,11 +50,11 @@ public class VentanaCursosEstudiante extends JFrame {
             if (seleccionado == null)
                 return;
 
-            Object[][] datos = new Object[seleccionado.getLista().size()][2];
-            for (int i = 0; i < seleccionado.getLista().size(); i++) {
-                Cursos c = seleccionado.getLista().get(i);
-                datos[i][0] = c.getCodigoCurso();
-                datos[i][1] = c.getNombre();
+            Object[][] datos = new Object[seleccionado.getMatriculas().size()][2];
+            for (int i = 0; i < seleccionado.getMatriculas().size(); i++) {
+                Matricula m = seleccionado.getMatriculas().get(i);
+                datos[i][0] = m.getCurso().getCodigoCurso();
+                datos[i][1] = m.getCurso().getNombre();
             }
 
             tablaCursos.setModel(new javax.swing.table.DefaultTableModel(datos, columnas));
