@@ -3,6 +3,8 @@ package view;
 import javax.swing.*;
 import java.util.*;
 import model.*;
+import javax.swing.table.DefaultTableModel;
+
 
 public class VentanaEstudiantesCurso extends JFrame {
     public VentanaEstudiantesCurso() {
@@ -28,7 +30,7 @@ public class VentanaEstudiantesCurso extends JFrame {
 
         String[] columnas = { "Código Estudiante", "Nombre", "Carrera" };
         Object[][] datosVacios = {};
-        JTable tablaCursos = new JTable(datosVacios, columnas);
+        JTable tablaCursos = new JTable(crearModelo(datosVacios, columnas));
         JScrollPane scroll = new JScrollPane(tablaCursos);
         scroll.setBounds(20, 110, 540, 250);
         add(scroll);
@@ -68,11 +70,21 @@ public class VentanaEstudiantesCurso extends JFrame {
                 datos[i][2] = est.getCarrera();
             }
 
-            tablaCursos.setModel(new javax.swing.table.DefaultTableModel(datos, columnas));
+            tablaCursos.setModel(crearModelo(datos, columnas));
+
         });
 
         setVisible(true);
     }
+
+        private DefaultTableModel crearModelo(Object[][] datos, String [] columnas){
+            return new DefaultTableModel(datos,columnas){
+                @Override
+                public boolean isCellEditable(int fila, int columna){
+                    return false;
+                }
+            };
+        }    
 
 }
 

@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import model.*;
 
 public class VentanaMostrarCursos extends JFrame {
@@ -19,9 +20,19 @@ public class VentanaMostrarCursos extends JFrame {
             datos[i][1] = c.getNombre();
         }
 
-        JTable tabla = new JTable(datos, columnas);
+        JTable tabla = new JTable(crearModelo(datos, columnas));
         add(new JScrollPane(tabla));
         setVisible(true);
     }
+
+        private DefaultTableModel crearModelo(Object[][] datos, String [] columnas){
+            return new DefaultTableModel(datos,columnas){
+                @Override
+                public boolean isCellEditable(int fila, int columna){
+                    return false;
+                }
+            };
+        }
+
 }
 

@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import model.*;
 
 public class VentanaCursosEstudiante extends JFrame {
@@ -57,10 +58,20 @@ public class VentanaCursosEstudiante extends JFrame {
                 datos[i][1] = m.getCurso().getNombre();
             }
 
-            tablaCursos.setModel(new javax.swing.table.DefaultTableModel(datos, columnas));
+            tablaCursos.setModel(crearModelo(datos, columnas));
         });
 
         setVisible(true);
     }
+
+        private DefaultTableModel crearModelo(Object[][] datos, String [] columnas){
+            return new DefaultTableModel(datos,columnas){
+                @Override
+                public boolean isCellEditable(int fila, int columna){
+                    return false;
+                }
+            };
+        }    
+
 }
 
