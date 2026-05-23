@@ -27,7 +27,7 @@ public class VentanaRegistrarNotasPorCurso extends JFrame{
 
         String[] columnas = { "Código", "Nombre", "Nota 1", "Nota 2", "Nota 3"};
         Object[][] datosVacios = {};
-        JTable tabla = new JTable(datosVacios, columnas);
+        JTable tabla = new JTable(crearModelo(datosVacios, columnas));
         JScrollPane scroll = new JScrollPane(tabla);
         scroll.setBounds(20, 70, 550, 230);
         add(scroll);              
@@ -56,12 +56,20 @@ public class VentanaRegistrarNotasPorCurso extends JFrame{
             datos[i][4] = "";
         }
 
-        tabla.setModel(new DefaultTableModel(datos, columnas));
-
+        tabla.setModel(crearModelo(datos, columnas));
         });
 
         setVisible(true);
 
     }   
+
+    private DefaultTableModel crearModelo(Object[][] datos, String [] columnas){
+        return new DefaultTableModel(datos,columnas){
+            @Override
+            public boolean isCellEditable(int fila, int columna){
+                return columna >=2;
+            }
+        };
+    }
 
 }
