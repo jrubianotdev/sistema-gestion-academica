@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.util.*;
 import model.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.*;
 
 
 public class VentanaEstudiantesCurso extends JFrame {
@@ -35,8 +36,8 @@ public class VentanaEstudiantesCurso extends JFrame {
         scroll.setBounds(20, 110, 540, 250);
         add(scroll);
 
-        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent e) {
+        txtBuscar.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
                 String filtro = txtBuscar.getText().toLowerCase();
                 cbCursos.removeAllItems();
                 for (Cursos est : Universidad.CursosUniversidad) {
