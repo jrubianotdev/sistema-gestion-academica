@@ -4,7 +4,10 @@ import javax.swing.*;
 import javax.swing.table.*;
 import java.util.*;
 import model.*;
-import java.awt.event.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
+import javax.swing.text.AttributeSet;
 
 public class VentanaRegistrarNotasPorCurso extends JFrame {
 
@@ -34,41 +37,9 @@ public class VentanaRegistrarNotasPorCurso extends JFrame {
         Object[][] datosVacios = {};
         JTable tabla = new JTable(crearModelo(datosVacios, columnas));
 
-        JTextField editorNotas = new JTextField();
-
-        editorNotas.addKeyListener(new KeyAdapter() {
-
-            @Override
-
-            public void keyTyped(KeyEvent e) {
-
-                char c = e.getKeyChar();
-
-                String texto = editorNotas.getText();
-
-                if (!Character.isDigit(c) &&
-                    c != '.' &&
-                    c != KeyEvent.VK_BACK_SPACE &&
-                    c != KeyEvent.VK_DELETE) {
-
-                    e.consume();
-                }
-
-                if (c == '.' && texto.contains(".")) {
-
-                    e.consume();
-
-                }
-
-            }
-
-        });
-
-        DefaultCellEditor editor = new DefaultCellEditor(editorNotas);
-
-        tabla.getColumnModel().getColumn(2).setCellEditor(editor);
-        tabla.getColumnModel().getColumn(3).setCellEditor(editor);
-        tabla.getColumnModel().getColumn(4).setCellEditor(editor);
+        tabla.getColumnModel().getColumn(2).setCellEditor(crearEditor());
+        tabla.getColumnModel().getColumn(3).setCellEditor(crearEditor());
+        tabla.getColumnModel().getColumn(4).setCellEditor(crearEditor());
 
         JScrollPane scroll = new JScrollPane(tabla);
         scroll.setBounds(20, 70, 550, 230);
@@ -107,10 +78,9 @@ public class VentanaRegistrarNotasPorCurso extends JFrame {
             }
 
             tabla.setModel(crearModelo(datos, columnas));
-            tabla.getColumnModel().getColumn(2).setCellEditor(editor);
-            tabla.getColumnModel().getColumn(3).setCellEditor(editor);
-            tabla.getColumnModel().getColumn(4).setCellEditor(editor);
-
+            tabla.getColumnModel().getColumn(2).setCellEditor(crearEditor());
+            tabla.getColumnModel().getColumn(3).setCellEditor(crearEditor());
+            tabla.getColumnModel().getColumn(4).setCellEditor(crearEditor());
         });
 
         btnGuardarNotas.addActionListener(e -> {
@@ -149,39 +119,27 @@ public class VentanaRegistrarNotasPorCurso extends JFrame {
                     double nota3 = Double.parseDouble(model.getValueAt(i, 4).toString());
 
                     if (nota1 < 0 || nota1 > 5 ||
-
                             nota2 < 0 || nota2 > 5 ||
-
                             nota3 < 0 || nota3 > 5) {
 
-                        JOptionPane.showMessageDialog(null,
-
-                                "Las notas deben estar entre 0 y 5.");
-
+                        JOptionPane.showMessageDialog(null, "Las notas deben estar entre 0 y 5.");
                         return;
-
                     }
 
                     for (Estudiante est : Universidad.EstudiantesUniversidad) {
                         if (est.getCodigoEstudiante() == codigo) {
 
                             for (Matricula m : est.getMatriculas()) {
-
                                 if (m.getCurso().getCodigoCurso() == seleccionado.getCodigoCurso()) {
-
                                     m.setNotas(0, nota1);
                                     m.setNotas(1, nota2);
                                     m.setNotas(2, nota3);
                                     break;
-
                                 }
-
                             }
                             break;
                         }
-
                     }
-
                 }
 
                 JOptionPane.showMessageDialog(null, "Notas registradas exitosamente");
@@ -194,7 +152,32 @@ public class VentanaRegistrarNotasPorCurso extends JFrame {
         });
 
         setVisible(true);
+    }
 
+    private DefaultCellEditor crearEditor() {
+        JTextField campo = new JTextField();
+        PlainDocument doc = new PlainDocument();
+        doc.setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string != null && isValid(fb.getDocument().getText(0, fb.getDocument().getLength()) + string)) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String string, AttributeSet attr) throws BadLocationException {
+                if (string != null && isValid(fb.getDocument().getText(0, fb.getDocument().getLength()) + string)) {
+                    super.replace(fb, offset, length, string, attr);
+                }
+            }
+
+            private boolean isValid(String text) {
+                return text.matches("[0-9]*\\.?[0-9]*");
+            }
+        });
+        campo.setDocument(doc);
+        return new DefaultCellEditor(campo);
     }
 
     private DefaultTableModel crearModelo(Object[][] datos, String[] columnas) {
@@ -205,5 +188,4 @@ public class VentanaRegistrarNotasPorCurso extends JFrame {
             }
         };
     }
-
 }

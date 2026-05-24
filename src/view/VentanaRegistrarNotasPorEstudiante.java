@@ -3,6 +3,10 @@ package view;
 import javax.swing.*;
 import model.*;
 import javax.swing.table.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
+import javax.swing.text.AttributeSet;
 
 public class VentanaRegistrarNotasPorEstudiante extends JFrame {
 
@@ -31,6 +35,11 @@ public class VentanaRegistrarNotasPorEstudiante extends JFrame {
         String[] columnas = { "Código", "Curso", "Nota 1", "Nota 2", "Nota 3" };
         Object[][] datosVacios = {};
         JTable tabla = new JTable(crearModelo(datosVacios, columnas));
+
+        tabla.getColumnModel().getColumn(2).setCellEditor(crearEditor());
+        tabla.getColumnModel().getColumn(3).setCellEditor(crearEditor());
+        tabla.getColumnModel().getColumn(4).setCellEditor(crearEditor());
+
         JScrollPane scroll = new JScrollPane(tabla);
         scroll.setBounds(20, 70, 550, 230);
         add(scroll);
@@ -57,6 +66,9 @@ public class VentanaRegistrarNotasPorEstudiante extends JFrame {
             }
 
             tabla.setModel(crearModelo(datos, columnas));
+            tabla.getColumnModel().getColumn(2).setCellEditor(crearEditor());
+            tabla.getColumnModel().getColumn(3).setCellEditor(crearEditor());
+            tabla.getColumnModel().getColumn(4).setCellEditor(crearEditor());
         });
 
         btnGuardarNotas.addActionListener(e -> {
@@ -80,27 +92,67 @@ public class VentanaRegistrarNotasPorEstudiante extends JFrame {
                 return;
             }
 
-            for (int i = 0; i < model.getRowCount(); i++) {
+            try {
 
-                double nota1 = Double.parseDouble(model.getValueAt(i, 2).toString());
-                double nota2 = Double.parseDouble(model.getValueAt(i, 3).toString());
-                double nota3 = Double.parseDouble(model.getValueAt(i, 4).toString());
+                for (int i = 0; i < model.getRowCount(); i++) {
 
-                Matricula m = seleccionado.getMatriculas().get(i);
+                    double nota1 = Double.parseDouble(model.getValueAt(i, 2).toString());
+                    double nota2 = Double.parseDouble(model.getValueAt(i, 3).toString());
+                    double nota3 = Double.parseDouble(model.getValueAt(i, 4).toString());
 
-                m.setNotas(0, nota1);
-                m.setNotas(1, nota2);
-                m.setNotas(2, nota3);
+                    if (nota1 < 0 || nota1 > 5 ||
+                            nota2 < 0 || nota2 > 5 ||
+                            nota3 < 0 || nota3 > 5) {
 
+                        JOptionPane.showMessageDialog(null, "Las notas deben estar entre 0 y 5.");
+                        return;
+                    }
+
+                    Matricula m = seleccionado.getMatriculas().get(i);
+
+                    m.setNotas(0, nota1);
+                    m.setNotas(1, nota2);
+                    m.setNotas(2, nota3);
+
+                }
+
+                JOptionPane.showMessageDialog(null, "Notas registradas exitosamente");
+                dispose();
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Ingrese valores numéricos válidos para las notas.");
             }
-
-            JOptionPane.showMessageDialog(null, "Notas registradas exitosamente");
-            dispose();
 
         });
 
         setVisible(true);
 
+    }
+
+    private DefaultCellEditor crearEditor() {
+        JTextField campo = new JTextField();
+        PlainDocument doc = new PlainDocument();
+        doc.setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string != null && isValid(fb.getDocument().getText(0, fb.getDocument().getLength()) + string)) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String string, AttributeSet attr) throws BadLocationException {
+                if (string != null && isValid(fb.getDocument().getText(0, fb.getDocument().getLength()) + string)) {
+                    super.replace(fb, offset, length, string, attr);
+                }
+            }
+
+            private boolean isValid(String text) {
+                return text.matches("[0-9]*\\.?[0-9]*");
+            }
+        });
+        campo.setDocument(doc);
+        return new DefaultCellEditor(campo);
     }
 
     private DefaultTableModel crearModelo(Object[][] datos, String[] columnas) {
