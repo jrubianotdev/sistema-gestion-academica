@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 import model.*;
+import java.awt.event.*;
 
 class VentanaRegistroEstudiante extends JFrame {
 
@@ -29,6 +30,21 @@ class VentanaRegistroEstudiante extends JFrame {
         JTextField txtEdad = new JTextField();
         txtEdad.setBounds(140, 80, 180, 30);
         add(txtEdad);
+
+        txtEdad.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+                char c = e.getKeyChar();
+
+                if (!Character.isDigit(c)) {
+                    e.consume();
+                }
+
+            }
+
+        });        
 
         JLabel lblGenero = new JLabel("Genero:");
         lblGenero.setBounds(30, 130, 100, 30);
