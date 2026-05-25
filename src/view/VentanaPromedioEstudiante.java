@@ -6,12 +6,12 @@ import model.*;
 
 public class VentanaPromedioEstudiante extends JFrame {
 
-    private String[] columnas = { "Código", "Curso", "Nota 1", "Nota 2", "Nota 3", "Final" };
+    private String[] columnas = { "Código", "Curso", "Nota 1", "Nota 2", "Nota 3", "Final", "Estado" };
 
     public VentanaPromedioEstudiante() {
         setTitle("Promedio Estudiante");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 400);
+        setSize(600, 450);
         setLayout(null);
         setLocationRelativeTo(null);
 
@@ -51,7 +51,7 @@ public class VentanaPromedioEstudiante extends JFrame {
                     String.format("Promedio del estudiante: %.1f", suma / cantidad));
         });
 
-        JTable tabla = new JTable(crearModelo(new Object[0][6], columnas));
+        JTable tabla = new JTable(crearModelo(new Object[0][7], columnas));
         JScrollPane scroll = new JScrollPane(tabla);
         scroll.setBounds(20, 70, 550, 230);
         add(scroll);
@@ -70,7 +70,7 @@ public class VentanaPromedioEstudiante extends JFrame {
     }
 
     private void actualizarTabla(Estudiante estudiante, JTable tabla) {
-        Object[][] datos = new Object[estudiante.getMatriculas().size()][6];
+        Object[][] datos = new Object[estudiante.getMatriculas().size()][7];
 
         for (int i = 0; i < estudiante.getMatriculas().size(); i++) {
             Matricula m = estudiante.getMatriculas().get(i);
@@ -80,6 +80,11 @@ public class VentanaPromedioEstudiante extends JFrame {
             datos[i][3] = m.getNotas()[1];
             datos[i][4] = m.getNotas()[2];
             datos[i][5] = String.format("%.1f", m.calcularPromedio());
+            if(m.aprobo()){
+                datos[i][6] = "Aprobado";
+            } else {
+                datos[i][6] = "Reprobado";
+            }
         }
 
         tabla.setModel(crearModelo(datos, columnas));
