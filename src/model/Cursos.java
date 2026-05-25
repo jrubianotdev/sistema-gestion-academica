@@ -4,7 +4,6 @@ public class Cursos {
 
     private String nombre;
     private int codigoCurso;
-    private double notas[] = new double[3];
 
     public Cursos(String nombre, int codigoCurso) {
         this.nombre = nombre;
@@ -19,20 +18,12 @@ public class Cursos {
         return codigoCurso;
     }
 
-    public double[] getNotas() {
-        return notas;
-    }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
     public void setCodigoCurso(int codigoCurso) {
         this.codigoCurso = codigoCurso;
-    }
-
-    public void setNotas(double[] notas) {
-        this.notas = notas;
     }
 
     @Override
