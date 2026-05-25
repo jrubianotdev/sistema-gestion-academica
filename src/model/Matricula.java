@@ -29,16 +29,11 @@ public class Matricula implements Calificable {
 
     @Override
     public double calcularPromedio() {
-        return (notas[0] + notas[1] + notas[2]) / 3;
+        return notas[0] * 0.3 + notas[1] * 0.3 + notas[2] * 0.4;
     }
 
     @Override
     public boolean aprobo() {
-
-        if (calcularPromedio() == -1) {
-            return false;
-        }
-
         return calcularPromedio() >= 3.0;
     }
 
