@@ -73,8 +73,7 @@ btnMatricular.addActionListener(e -> {
         JOptionPane.showMessageDialog(null,"Seleccione un curso");
         return;
     }    
-
-    Estudiante estudianteSeleccionado = Universidad.EstudiantesUniversidad.get(indexEstudiante);
+    Estudiante estudianteSeleccionado = (Estudiante) cmbEstudiantes.getSelectedItem();
     Cursos cursoSeleccionado = Universidad.CursosUniversidad.get(indexCurso);
 
     estudianteSeleccionado.Matricular(cursoSeleccionado);
